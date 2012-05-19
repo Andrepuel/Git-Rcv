@@ -1,0 +1,44 @@
+#!/usr/bin/python
+import os
+import sys
+import shlex
+import git_mng
+from git_mng import checkPermission
+user = sys.argv[1]
+
+try:
+	argv = shlex.split(os.environ["SSH_ORIGINAL_COMMAND"])
+	if len(argv) < 1:
+		raise Exception()
+except:
+	sys.stderr.writelines("Do you think I am a shell?\n");
+	sys.exit(1)
+
+writeAccess = True
+if argv[0] == "git-receive-pack":
+	writeAccess = True
+elif argv[0] in ["git-upload-pack","git-upload-archive"]:
+	writeAccess = False
+elif argv[0] in ["create-repo","receive-permissions","upload-permissions","list-repos"]:
+	git_mng.manage(user,*argv)
+	sys.exit(0)
+else:
+	sys.stderr.writelines("Do you think I am a shell?\n")
+	sys.exit(1)
+
+command = argv[0]
+dir = argv[-1]
+
+access = "READ"
+if writeAccess:
+	access = "WRITE"
+try:
+	if not checkPermission(dir,user,access):
+		sys.stderr.writelines("Access denied 1-58\n")
+		sys.exit(1)
+
+	import subprocess
+	subprocess.call([command,dir])
+except:
+	sys.stderr.writelines("Access denied 1-64\n")
+	sys.exit(1)
