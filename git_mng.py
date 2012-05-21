@@ -2,14 +2,14 @@ import os
 import sys
 import subprocess
 
-if os.path.exists("git_rcv_assets.py"):
+try:
 	import git_rcv_assets
 	hostname = git_rcv_assets.hostname
-else:
+except:
 	hostname = "localhost"
 
 def returnPermission(dirpath,username):
-	usersFile = open(os.path.join(dirpath,"users"))
+	usersFile = open(os.path.join(dirpath,"users"),"r")
 	#TODO db-it
 	permissions = {"READ":set(),"WRITE":set()}
 	state = None
@@ -25,7 +25,7 @@ def returnPermission(dirpath,username):
 			continue
 		assert state is not None
 		permissions[state].add(eachLine[:-1])
-	
+	usersFile.close()	
 	if username in permissions["WRITE"] or "*" in permissions["WRITE"]:
 		return "WRITE"
 	if username in permissions["READ"] or "*" in permissions["READ"]:
@@ -89,6 +89,11 @@ def manage(user,*argv):
 		permissions = open(os.path.join(dir,"users"),"w")
 		for i in sys.stdin:
 			permissions.write(i)
+		permissions.close()
+		if( checkPermission(dir,"*","READ") ):
+			subprocess.check_call(["chmod","-R","o+rx",dir])
+		else:
+			subprocess.check_call(["chmod","-R","o-rx",dir])
 		return
 	if command == "upload-permissions":
 		assertowner(user,dir)
