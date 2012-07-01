@@ -19,7 +19,7 @@ if argv[0] == "git-receive-pack":
 	writeAccess = True
 elif argv[0] in ["git-upload-pack","git-upload-archive"]:
 	writeAccess = False
-elif argv[0] in ["create-repo","receive-permissions","upload-permissions","list-repos"]:
+elif argv[0] in ["create-repo","receive-permissions","upload-permissions","list-repos","fork"]:
 	git_mng.manage(user,*argv)
 	sys.exit(0)
 else:

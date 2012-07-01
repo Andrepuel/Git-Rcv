@@ -67,6 +67,26 @@ def manage(user,*argv):
 	command = argv[0]
 	if len(argv) > 1:
 		dir = argv[1]
+	if len(argv) > 2:
+		dest = argv[2]
+	if command == "fork":
+		assert len(argv) > 2
+		try:
+			assert checkPermission(dir,user,"READ")
+			os.makedirs(dest)
+		except:
+			sys.stderr.writelines("Access denied\n")
+			sys.exit(1)
+		try:
+			subprocess.check_call(["git","clone","-l","--bare",dir,dest])
+			os.chdir(dest)
+			owner = open("owner","w")
+			owner.writelines(user+"\n")
+			permissions = open("users","w")
+			permissions.write("READ:\n*\nWRITE:\n"+user+"\n")
+		except:
+			sys.stderr.writelines("Error on repo creation\n")
+			sys.exit(1)
 	if command == "create-repo":
 		try:
 			os.makedirs(dir)
@@ -107,3 +127,4 @@ def manage(user,*argv):
 		for i in result:
 			print os.environ["USER"]+"@"+hostname+":"+i[2:]
 		return
+		

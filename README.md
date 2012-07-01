@@ -27,6 +27,7 @@ Usage
 * `ssh git_rcv_user@git_rcv_host git-receive-pack repo_dir` Used internally by git to write data to repo.
 * `ssh git_rcv_user@git_rcv_host git-upload-pack repo_dir` Used internally by git to read data from repo.
 * `ssh git_rcv_user@git_rcv_host git-upload-archive repo_dir` Used internally by git to read data from repo.
+* `ssh git_rcv_user@git_rcv_host fork repo_dir forked_repo_dir` Copies the repository at `repo_dir` to `forked_repo_dir`. This is faster (and saves disk space) than creating a `forked_repo_dir` manually and pushing `repo_dir`'s data do the new repo.
 * `ssh git_rcv_user@git_rcv_host create-repo repo_dir` Creates a repository with path `repo_dir`.
 * `ssh git_rcv_user@git_rcv_host receive-permissions repo_dir` Outputs the list of permissions of repo in `repo_dir`. 
 * `ssh git_rcv_user@git_rcv_host upload-permissions repo_dir` Read a new list of persmissions from standard input and write it over `repo_dir`'s permission list.
