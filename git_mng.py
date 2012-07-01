@@ -9,7 +9,7 @@ except:
 	hostname = "localhost"
 
 def returnPermission(dirpath,username):
-	usersFile = open(os.path.join(dirpath,"users"),"r")
+	usersFile = open(os.path.join(os.path.expanduser(dirpath),"users"),"r")
 	#TODO db-it
 	permissions = {"READ":set(),"WRITE":set()}
 	state = None
